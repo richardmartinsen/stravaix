@@ -25,9 +25,9 @@ namespace Stravaix.Controllers
         {
             ViewBag.Message = "Your application description page.";
             
-            var b = StravaTest();
-
-            return View();
+            Task<List<Comment>> b = StravaTest();
+            List<Comment> c = b.Result;
+            return View(c);
         }
 
         public ActionResult Contact()
@@ -36,7 +36,7 @@ namespace Stravaix.Controllers
 
             var b = getAthleteSummary();
 
-            return View();
+            return View(b);
         }
 
         //private async static Task<AthleteSummary> StravaTest()
@@ -69,6 +69,25 @@ namespace Stravaix.Controllers
             List<Comment> c = client.Activities.GetComments("447602106");
             AthleteSummary athlete = client.Athletes.GetAthlete("70857");
             Activity activity = client.Activities.GetActivity("447132037", true);
+            List<ActivityZone> zones = client.Activities.GetActivityZones("447132037");
+            List<ActivitySummary> listAkt = client.Activities.GetActivitiesAfter(DateTime.Now.AddDays(-30));
+            foreach (var actSum in listAkt)
+            {
+                List<ActivityZone> actSoner = client.Activities.GetActivityZones(actSum.Id.ToString());
+                var puls = actSoner.First();
+                var suffer = puls.Score;
+                System.Diagnostics.Debug.WriteLine("Navn : " + actSum.Name + " Suffer : " + suffer);
+            }
+            //System.Diagnostics.Debug.WriteLine("Hvorfor kommer det ikke noe i loggen?");
+            //foreach (var activityZone in zones)
+            //{
+            //    var b = activityZone.Buckets;
+            //    System.Diagnostics.Debug.WriteLine(activityZone.Score);
+            //    foreach (var bucket in b)
+            //    {
+            //        System.Diagnostics.Debug.WriteLine(bucket.Minimum + " - " + bucket.Maximum + " - " + bucket.Time);
+            //    }
+            //}
             //ActivityMeta am = client.Activities.GetActivity()
             List<ActivityStream> streams = stream.GetActivityStream("447132037", StreamType.Watts, StreamResolution.All);
             return a;
