@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Stravaix.Models.SufferScore>
+@{
     ViewBag.Title = "Contact";
 }
 <h2>@ViewBag.Title.</h2>
@@ -15,3 +16,76 @@
     <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
 </address>
+
+<div class="row">
+    <div class="col-md-6">
+        <section class="widget large">
+            <header>
+                <h4><i class="fa fa-bullhorn"></i> Stream Stacked Chart</h4>
+            </header>
+            <div id="sources-chart-stacked" class="body chart">
+                <svg></svg>
+            </div>
+        </section>
+    </div>
+    <div class="col-md-6">
+        <section class="widget large">
+            <header>
+                <h4><i class="fa fa-arrow-circle-o-right"></i> Line Chart</h4>
+            </header>
+            <div id="sources-chart-line" class="body chart">
+                <svg></svg>
+            </div>
+        </section>
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Navn
+        </th>
+        <th>
+            SufferScore
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+        </tr>
+    }
+
+</table>
+@*@Scripts.Render("~/dist/lib/nvd3/package.js");*@
+@*@Scripts.Render("~/Scripts/addGraph.js")*@
+
+    <!-- page specific scripts -->
+<!-- page libs -->
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script src="~/dist/js/nvd3-custom-lb1.0/lib/d3.v2.min.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/nv.d3.custom.js"></script>
+
+<!-- nvd3 models -->
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/scatter.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/axis.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/legend.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/stackedArea.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/stackedAreaChart.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/line.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/pie.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/pieChartTotal.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/stream_layers.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/lineChart.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/multiBar.js"></script>
+<script src="~/dist/js/nvd3-custom-lb1.0/src/models/multiBarChart.js"></script>
+
+<!-- page application js -->
+<script src="~/dist/js/stat-charts.js"></script>

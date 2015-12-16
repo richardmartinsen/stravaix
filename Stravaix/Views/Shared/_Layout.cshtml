@@ -3,9 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Enda en Strava App</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/dist/css/application.css")
     @Scripts.Render("~/bundles/modernizr")
+    <script>
+        /* yeah we need this empty stylesheet here. It's cool chrome & chromium fix
+           chrome fix https://code.google.com/p/chromium/issues/detail?id=167083
+                      https://code.google.com/p/chromium/issues/detail?id=332189
+        */
+    </script>
 
 </head>
 <body>
@@ -21,6 +28,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="index.html"><i class="fa fa-home"></i> <span class="name">Dashboard</span></a>
+                    </li>
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
@@ -30,15 +40,94 @@
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+
+    </div>
+    @RenderBody()
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+    </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <!-- common libraries. required for every page-->
+    <script src="~/dist/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/dist/lib/jquery-pjax/jquery.pjax.js"></script>
+    <script src="~/dist/lib/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+    <script src="~/dist/lib/widgster/widgster.js"></script>
+    <script src="~/dist/lib/underscore/underscore.js"></script>
+
+    <!-- common application js -->
+    <script src="~/dist/js/app.js"></script>
+    <script src="~/dist/js/settings.js"></script>
+
+    <!-- common templates -->
+    <script type="text/template" id="settings-template">
+        <div class="setting clearfix">
+            <div>Background</div>
+            <div id="background-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
+                <% dark = background == 'dark'; light = background == 'light';%>
+                <button type="button" data-value="dark" class="btn btn-sm btn-default <%= dark? 'active' : '' %>">Dark</button>
+                <button type="button" data-value="light" class="btn btn-sm btn-default <%= light? 'active' : '' %>">Light</button>
+            </div>
+        </div>
+        <div class="setting clearfix">
+            <div>Sidebar on the</div>
+            <div id="sidebar-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
+                <% onRight = sidebar == 'right'%>
+                <button type="button" data-value="left" class="btn btn-sm btn-default <%= onRight? '' : 'active' %>">Left</button>
+                <button type="button" data-value="right" class="btn btn-sm btn-default <%= onRight? 'active' : '' %>">Right</button>
+            </div>
+        </div>
+        <div class="setting clearfix">
+            <div>Sidebar</div>
+            <div id="display-sidebar-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
+                <% display = displaySidebar%>
+                <button type="button" data-value="true" class="btn btn-sm btn-default <%= display? 'active' : '' %>">Show</button>
+                <button type="button" data-value="false" class="btn btn-sm btn-default <%= display? '' : 'active' %>">Hide</button>
+            </div>
+        </div>
+        <div class="setting clearfix">
+            <div>White Version</div>
+            <div>
+                <a href="../white/index.html" class="btn btn-sm btn-default">&nbsp; Switch &nbsp;   <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="sidebar-settings-template">
+        <% auto = sidebarState == 'auto'%>
+        <% if (auto) {%>
+        <button type="button"
+                data-value="icons"
+                class="btn-icons btn btn-transparent btn-sm">
+            Icons
+        </button>
+        <button type="button"
+                data-value="auto"
+                class="btn-auto btn btn-transparent btn-sm">
+            Auto
+        </button>
+        <%} else {%>
+        <button type="button"
+                data-value="auto"
+                class="btn btn-transparent btn-sm">
+            Auto
+        </button>
+        <% } %>
+    </script>
+
+    <!-- page specific scripts -->
+    <!-- page specific libs -->
+    <script src="~/dist/lib/jquery-ui/ui/core.js"></script>
+    <script src="~/dist/lib/jquery-ui/ui/widget.js"></script>
+    <script src="~/dist/lib/jquery-ui/ui/mouse.js"></script>
+    <script src="~/dist/lib/jquery-ui/ui/sortable.js"></script>
+    <script src="~/dist/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+    <!-- page application js -->
+    <script src="~/dist/js/grid-live.js"></script>
 </body>
 </html>
