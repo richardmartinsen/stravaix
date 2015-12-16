@@ -6,8 +6,10 @@ using System.Web.Mvc;
 
 namespace Stravaix.Controllers
 {
+    using System.Collections;
     using System.Threading.Tasks;
 
+    using Stravaix.Models;
     using Stravaix.StravaApi.Activities;
     using Stravaix.StravaApi.Athletes;
     using Stravaix.StravaApi.Authentication;
@@ -25,9 +27,12 @@ namespace Stravaix.Controllers
         {
             ViewBag.Message = "Your application description page.";
             
-            Task<List<Comment>> b = StravaTest();
-            List<Comment> c = b.Result;
-            return View(c);
+            //Task<List<Comment>> b = StravaTest();
+            //List<Comment> c = b.Result;
+
+            var b = getAthleteSummary();
+
+            return View(b);
         }
 
         public ActionResult Contact()
@@ -37,6 +42,12 @@ namespace Stravaix.Controllers
             var b = getAthleteSummary();
 
             return View(b);
+        }
+
+        public JsonResult GetJsonResult()
+        {
+            var b = getAthleteSummary();
+            return Json(b, JsonRequestBehavior.AllowGet);
         }
 
         //private async static Task<AthleteSummary> StravaTest()
@@ -55,28 +66,34 @@ namespace Stravaix.Controllers
             return comments;
         }
 
-        private static AthleteSummary getAthleteSummary()
+        private static IEnumerable<SufferScore> getAthleteSummary()
         {
             StaticAuthentication auth = new StaticAuthentication("72da1a028657d1d0a5c628c87373bebdf15151db");
             StravaClient client = new StravaClient(auth);
             StreamClient stream = new StreamClient(auth);
+            //SufferStats stats = new SufferStats();
+            List<SufferScore> stats = new List<SufferScore>();
 
             //List<Comment> comments = await client.GetCommentsAsync("102162300");
             //Activity athlete = await client.GetActivityAsync("102162300");
             //Athlete athlete = await client.GetAthleteAsync("1985994");
             //AthleteSummary a = await client.Athletes.GetAthleteAsync();
-            AthleteSummary a = client.Athletes.GetAthlete();
-            List<Comment> c = client.Activities.GetComments("447602106");
-            AthleteSummary athlete = client.Athletes.GetAthlete("70857");
-            Activity activity = client.Activities.GetActivity("447132037", true);
-            List<ActivityZone> zones = client.Activities.GetActivityZones("447132037");
+            //AthleteSummary a = client.Athletes.GetAthlete();
+            //List<Comment> c = client.Activities.GetComments("447602106");
+            //AthleteSummary athlete = client.Athletes.GetAthlete("70857");
+            //Activity activity = client.Activities.GetActivity("447132037", true);
+            //List<ActivityZone> zones = client.Activities.GetActivityZones("447132037");
             List<ActivitySummary> listAkt = client.Activities.GetActivitiesAfter(DateTime.Now.AddDays(-30));
             foreach (var actSum in listAkt)
             {
+                SufferScore score = new SufferScore();
                 List<ActivityZone> actSoner = client.Activities.GetActivityZones(actSum.Id.ToString());
                 var puls = actSoner.First();
-                var suffer = puls.Score;
-                System.Diagnostics.Debug.WriteLine("Navn : " + actSum.Name + " Suffer : " + suffer);
+                //var suffer = puls.Score;
+                score.Name = actSum.Name;
+                score.Score = puls.Score;
+                stats.Add(score);
+                //System.Diagnostics.Debug.WriteLine("Navn : " + actSum.Name + " Suffer : " + suffer);
             }
             //System.Diagnostics.Debug.WriteLine("Hvorfor kommer det ikke noe i loggen?");
             //foreach (var activityZone in zones)
@@ -89,8 +106,8 @@ namespace Stravaix.Controllers
             //    }
             //}
             //ActivityMeta am = client.Activities.GetActivity()
-            List<ActivityStream> streams = stream.GetActivityStream("447132037", StreamType.Watts, StreamResolution.All);
-            return a;
+            //List<ActivityStream> streams = stream.GetActivityStream("447132037", StreamType.Watts, StreamResolution.All);
+            return stats.ToArray();
         }
     }
 }
